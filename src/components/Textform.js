@@ -4,28 +4,32 @@ export default function Textform(props) {
     // console.log("UpperCase was clicked...")
     // setText("")
     setText(text.toUpperCase());
+    props.showAlert("Converted to upper case","success")
   };
   const handleLoClick = () => {
     // console.log("UpperCase was clicked...")
     // setText("")
     setText(text.toLowerCase());
+    props.showAlert("Converted to lower case","success")
   };
   const handleCtClick = () => {
     // console.log("UpperCase was clicked...")
     setText("");
+    props.showAlert("Text is cleared","warning")
   };
   const handleOnChange = (event) => {
     // console.log("On change...")
     setText(event.target.value);
   };
   const handleCopy =()=>{
-    let txt=document.getElementById("myBox");
-    txt.select();
-    navigator.clipboard.writeText(txt.value);
+    navigator.clipboard.writeText(text);
+    document.getSelection().removeAllRanges()
+    props.showAlert("Text copied to clipboard","success")
   }
   const handleExtraSpaces=()=>{
     let newTxt=text.split(/[ ]+/);
     setText(newTxt.join(" "));
+    props.showAlert("Cleared extra spaces","success")
   }
   const [text, setText] = useState("");
   return (
@@ -44,28 +48,28 @@ export default function Textform(props) {
             rows="10"
           ></textarea>
         </div>
-        <button className="btn btn-primary mx-3" onClick={handleUpClick}>
+        <button disabled={text.length===0} className="btn btn-primary mx-3" onClick={handleUpClick}>
           Convert to Uppercase
         </button>
-        <button className="btn btn-primary mx-3" onClick={handleLoClick}>
+        <button disabled={text.length===0}  className="btn btn-primary mx-3" onClick={handleLoClick}>
           Convert to Lowercase
         </button>
-        <button className="btn btn-primary mx-3" onClick={handleCtClick}>
+        <button disabled={text.length===0}  className="btn btn-primary mx-3" onClick={handleCtClick}>
           Clear Text
         </button>
-        <button className="btn btn-primary mx-3" onClick={handleCopy}>
+        <button disabled={text.length===0}  className="btn btn-primary mx-3" onClick={handleCopy}>
           Copy
         </button>
-        <button className="btn btn-primary mx-3" onClick={handleExtraSpaces}>
+        <button disabled={text.length===0}  className="btn btn-primary mx-3" onClick={handleExtraSpaces}>
           Remove extra Spaces
         </button>
       </div>
       <div className="container my-3" style={{color:  props.mode==='light'?'#212129':'white'}}>
         <h1>Your Text Summary</h1>
-        <p>{text.split(" ").length} word and {text.length} characters</p>
-        <p>Required {0.008*text.split(" ").length} Minutes to read</p>
+        <p>{text.split(" ").filter((element)=> {return element.length!==0}).length} word and {text.length} characters</p>
+        <p>Required {0.008*text.split(" ").filter((element)=> {return element.length!==0}).length} Minutes to read</p>
         <h2>Preview</h2>
-        <p>{text.length>0?text:"Enter some text in Textbox to preview"}</p>
+        <p>{text.length>0?text:"Nothing to preview"}</p>
 
       </div>
     </>
